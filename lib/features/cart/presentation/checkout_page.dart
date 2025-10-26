@@ -5,7 +5,9 @@ import 'package:kntina_app/features/shared/widgets/custom_text_field.dart';
 
 class CheckoutPage extends StatelessWidget {
   final double price;
-  const CheckoutPage({super.key, required this.price});
+  final List? cartList;
+  final VoidCallback? completeOrder;
+  const CheckoutPage({super.key, required this.price, this.cartList, this.completeOrder});
 
   @override
   Widget build(BuildContext context) {
@@ -90,8 +92,13 @@ class CheckoutPage extends StatelessWidget {
     child: SizedBox(
       child: CustomButton(
         onPressed: () {
+          if (completeOrder != null) {
+            completeOrder!();
+          }
           ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Pedido realizado con éxito')),);
+            SnackBar(content: Text('Pedido realizado con éxito')),
+          );
+          Navigator.of(context).popUntil((route) => route.isFirst);
         },
         text: 'Aceptar y pagar',
       ),
