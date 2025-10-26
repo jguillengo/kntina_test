@@ -50,18 +50,7 @@ class FoodDetailPage extends StatelessWidget {
             Center(
               child: CustomButton(
                 onPressed: () {
-                  bool wasAdded = addToCart(food);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        wasAdded 
-                          ? 'Producto añadido a la cesta'
-                          : 'Este producto ya está en la cesta'
-                      ),
-                      duration: Duration(seconds: 2),
-                      backgroundColor: wasAdded ? Colors.green : Colors.orange,
-                    ),
-                  );
+                  addToCart(food);
                 },
                 text: 'Añadir a la cesta',
               ),

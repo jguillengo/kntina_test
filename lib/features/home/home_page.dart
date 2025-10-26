@@ -39,20 +39,18 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  bool addToCart(item) {
+  void addToCart(item) {
     bool itemExists = cartList.any((cartItem) => cartItem['id'] == item['id']);
-    
+
     if (!itemExists) {
       setState(() {
         cartList.add(item);
       });
-      return true; // Item was added
     }
-    return false; // Item already exists
   }
 
   List<Widget> get pageOptions => [
-    FoodListPage(foodList: _foodList, addToCart: addToCart),  
+    FoodListPage(foodList: _foodList, addToCart: addToCart),
     OrdersPage(orderList: testUser.orderHistory),
     CartPage(cartList: cartList),
   ];
@@ -71,15 +69,19 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
             onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => ProfilePage()));},
-            child: CircleAvatar(radius: 18, backgroundImage: AssetImage(testUser.profileImage),)),
-        ),
-        title:  Center(
-            child: Image.asset('assets/images/logo.png', height: 25),
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => ProfilePage()),
+              );
+            },
+            child: CircleAvatar(
+              radius: 18,
+              backgroundImage: AssetImage(testUser.profileImage),
+            ),
           ),
-        
+        ),
+        title: Center(child: Image.asset('assets/images/logo.png', height: 25)),
+
         actions: [
           IconButton(
             icon: const Icon(Icons.search, color: Colors.black),
