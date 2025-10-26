@@ -1,0 +1,179 @@
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:kntina_app/features/auth/presentation/login_page.dart';
+import 'package:kntina_app/features/shared/widgets/custom_button.dart';
+import 'package:kntina_app/features/shared/widgets/custom_text_field.dart';
+import 'package:kntina_app/user.dart';
+
+class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
+
+  @override
+  State<SignupPage> createState() => SignupPageState();
+}
+
+class SignupPageState extends State<SignupPage> {
+  final _formSignupKey = GlobalKey<FormState>();
+  String _tel = '';
+  String _mail = '';
+  String _username = '';
+  String _password = '';
+
+  bool _termsAccepted = false;
+
+  void setSignup() {
+    if (!_termsAccepted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Debes aceptar los términos y condiciones')),
+      );
+      return;
+    }
+
+    if (_formSignupKey.currentState!.validate()) {
+      _formSignupKey.currentState!.save();
+
+      testUser.name = _username;
+      testUser.phone = _tel;
+      testUser.email = _mail;
+      testUser.password = _password;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Perfil registrado correctamente')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/login.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: SizedBox(
+            height: double.infinity,
+            child: Column(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 100),
+                    Center(
+                      child: Image.asset("assets/images/logo.png", width: 200),
+                    ),
+                    SizedBox(height: 50),
+                    Text(
+                      'Te damos la bienvenida a Kntina',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    Text('Crea tu cuenta!', style: TextStyle(fontSize: 16)),
+                    SizedBox(height: 20),
+                    CircleAvatar(
+                      radius: 70,
+                      child: Icon(Icons.image_not_supported, size: 20),
+                    ),
+                    Form(
+                      key: _formSignupKey,
+                      child: Column(
+                        children: [
+                          CustomTextField(
+                            label: 'Nombre y apellidos',
+                            icon: Icons.person,
+                            validator: (value) => value!.isEmpty
+                                ? "Por favor introduce un nombre de usuario"
+                                : null,
+                            onSaved: (value) => _username = value!,
+                          ),
+                          SizedBox(height: 16),
+                          CustomTextField(
+                            label: 'Teléfono',
+                            icon: Icons.phone,
+                            keyboardType: TextInputType.phone,
+                            validator: (value) => value!.isEmpty
+                                ? "Por favor introduce un teléfono"
+                                : null,
+                            onSaved: (value) => _tel = value!,
+                          ),
+                          SizedBox(height: 16),
+                          CustomTextField(
+                            label: 'Correo',
+                            icon: Icons.mail,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value) => value!.isEmpty
+                                ? "Por favor introduce un correo electrónico"
+                                : null,
+                            onSaved: (value) => _mail = value!,
+                          ),
+                          SizedBox(height: 16),
+                          CustomTextField(
+                            label: 'Contraseña',
+                            icon: Icons.lock,
+                            isPassword: true,
+                            validator: (value) => value!.isEmpty
+                                ? "Por favor introduce una contraseña"
+                                : null,
+                            onSaved: (value) => _password = value!,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _termsAccepted,
+                      onChanged: (value) {
+                        setState(() {
+                          _termsAccepted = value!;
+                        });
+                      },
+                    ),
+                    Expanded(
+                      child: Text(
+                        'He leído y acepto los términos y condiciones y la política de privacidad',
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                CustomButton(onPressed: setSignup, text: 'Crear cuenta'),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('¿Ya tienes cuenta? '),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '¡Entra en Kntina!',
+                            style: TextStyle(color: Colors.blue),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute<void>(
+                                    builder: (context) => const LoginPage(),
+                                  ),
+                                );
+                              },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
