@@ -40,16 +40,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void addToCart(item) {
-    int existingIndex = cartList.indexWhere(
-      (cartItem) => cartItem['id'] == item['id'],
-    );
+    bool itemExists = cartList.any((cartItem) => cartItem['id'] == item['id']);
 
-    if (existingIndex != -1) {
-      setState(() {
-        cartList[existingIndex]['quantity'] =
-            (cartList[existingIndex]['quantity'] ?? 1) + 1;
-      });
-    } else {
+    if (!itemExists) {
       setState(() {
         Map<String, dynamic> cartItem = Map<String, dynamic>.from(item);
         cartItem['quantity'] = 1;
