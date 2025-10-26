@@ -40,19 +40,51 @@ class _HomePageState extends State<HomePage> {
   }
 
   void addToCart(item) {
-    bool itemExists = cartList.any((cartItem) => cartItem['id'] == item['id']);
+    int existingIndex = cartList.indexWhere(
+      (cartItem) => cartItem['id'] == item['id'],
+    );
 
-    if (!itemExists) {
+    if (existingIndex != -1) {
       setState(() {
-        cartList.add(item);
+        cartList[existingIndex]['quantity'] =
+            (cartList[existingIndex]['quantity'] ?? 1) + 1;
+      });
+    } else {
+      setState(() {
+        Map<String, dynamic> cartItem = Map<String, dynamic>.from(item);
+        cartItem['quantity'] = 1;
+        cartList.add(cartItem);
       });
     }
+  }
+
+  void updateCartItemQuantity(int itemId, int newQuantity) {
+    setState(() {
+      int index = cartList.indexWhere((cartItem) => cartItem['id'] == itemId);
+      if (index != -1) {
+        if (newQuantity <= 0) {
+          cartList.removeAt(index);
+        } else {
+          cartList[index]['quantity'] = newQuantity;
+        }
+      }
+    });
+  }
+
+  void removeFromCart(int itemId) {
+    setState(() {
+      cartList.removeWhere((cartItem) => cartItem['id'] == itemId);
+    });
   }
 
   List<Widget> get pageOptions => [
     FoodListPage(foodList: _foodList, addToCart: addToCart),
     OrdersPage(orderList: testUser.orderHistory),
-    CartPage(cartList: cartList),
+    CartPage(
+      cartList: cartList,
+      updateQuantity: updateCartItemQuantity,
+      removeItem: removeFromCart,
+    ),
   ];
 
   void onPageSelected(index) {

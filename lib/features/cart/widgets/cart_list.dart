@@ -3,7 +3,15 @@ import 'package:kntina_app/features/cart/widgets/cart_food_card.dart';
 
 class CartList extends StatelessWidget {
   final List cartList;
-  const CartList({super.key, required this.cartList});
+  final Function(int, int)? updateQuantity;
+  final Function(int)? removeItem;
+
+  const CartList({
+    super.key,
+    required this.cartList,
+    this.updateQuantity,
+    this.removeItem,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +22,12 @@ class CartList extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           return Column(
             children: [
-              CartFoodCard(item: cartList[index]),
-              SizedBox(height: 20,)
+              CartFoodCard(
+                item: cartList[index],
+                updateQuantity: updateQuantity,
+                removeItem: removeItem,
+              ),
+              SizedBox(height: 20),
             ],
           );
         },
